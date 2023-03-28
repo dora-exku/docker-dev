@@ -31,6 +31,9 @@ services:
 
   php-fpm-82:
     build: ./php-fpm-82
+    ports:
+      - "9501:9501"
+      - "9082:9003"
     volumes:
       - ${CODE_DIR}:/var/www
     networks:

@@ -45,4 +45,10 @@ RUN pecl install memcached-2.2.0 \
 RUN curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/composer
 
+# # 命令补全
+# RUN apt-get install -y bash-completion \
+#     echo "if [ -f /etc/bash_completion ]; then \
+#     . /etc/bash_completion \
+#     fi" >> ~/.bashrc
+
 EXPOSE 9000
