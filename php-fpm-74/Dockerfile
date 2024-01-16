@@ -1,4 +1,4 @@
-FROM php:8.2-fpm
+FROM php:7.4-fpm
 
 WORKDIR /var/www
 
@@ -43,34 +43,34 @@ RUN pecl install memcached-3.2.0 \
     && docker-php-ext-enable memcached redis
 
 # swoole 
-RUN apt-get install -y libssl-dev libcurl4-openssl-dev \ 
-    && docker-php-source extract  \
-    && mkdir /usr/src/php/ext/swoole \
-    && wget https://github.com/swoole/swoole-src/archive/refs/tags/v5.0.2.tar.gz \
-    && tar -xvf v5.0.2.tar.gz --strip-components=1 -C /usr/src/php/ext/swoole \
-    && docker-php-ext-configure swoole \
-    --enable-mysqlnd      \
-    --enable-openssl      \
-    --enable-sockets --enable-swoole-curl \
-    && docker-php-ext-install -j$(nproc) swoole \
-    && rm -rf v5.0.2.tar.gz \
-    && docker-php-source delete 
+# RUN apt-get install -y libssl-dev libcurl4-openssl-dev \ 
+#     && docker-php-source extract  \
+#     && mkdir /usr/src/php/ext/swoole \
+#     && wget https://github.com/swoole/swoole-src/archive/refs/tags/v5.0.2.tar.gz \
+#     && tar -xvf v5.0.2.tar.gz --strip-components=1 -C /usr/src/php/ext/swoole \
+#     && docker-php-ext-configure swoole \
+#     --enable-mysqlnd      \
+#     --enable-openssl      \
+#     --enable-sockets --enable-swoole-curl \
+#     && docker-php-ext-install -j$(nproc) swoole \
+#     && rm -rf v5.0.2.tar.gz \
+#     && docker-php-source delete 
 
 
 
-RUN apt-get install -y librdkafka-dev  \
-    && pecl install xdebug rdkafka \
-    && docker-php-ext-enable xdebug rdkafka
+# RUN apt-get install -y librdkafka-dev  \
+#     && pecl install xdebug rdkafka \
+#     && docker-php-ext-enable xdebug rdkafka
 
-# ImageMagick
-RUN apt-get install -y libmagickwand-dev \
-    && pecl install imagick \
-    && docker-php-ext-enable imagick
+# # ImageMagick
+# RUN apt-get install -y libmagickwand-dev \
+#     && pecl install imagick \
+#     && docker-php-ext-enable imagick
 
-# 配置 Xdebug
-RUN echo "xdebug.mode=debug" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-    && echo "xdebug.client_host=host.docker.internal" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-    && echo "xdebug.client_port=9003" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+# # 配置 Xdebug
+# RUN echo "xdebug.mode=debug" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+#     && echo "xdebug.client_host=host.docker.internal" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+#     && echo "xdebug.client_port=9003" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 RUN curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/composer

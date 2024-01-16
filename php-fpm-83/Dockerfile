@@ -1,4 +1,4 @@
-FROM php:8.2-fpm
+FROM php:8.3-rc-fpm
 
 WORKDIR /var/www
 
@@ -38,23 +38,12 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install -j$(nproc) pcntl
 # && docker-php-ext-install -j$(nproc) xmlrpc
 
-RUN pecl install memcached-3.2.0 \
-    pecl install redis-5.3.7 \
-    && docker-php-ext-enable memcached redis
+RUN pecl install redis-6.0.2 \
+    && docker-php-ext-enable redis
 
 # swoole 
-RUN apt-get install -y libssl-dev libcurl4-openssl-dev \ 
-    && docker-php-source extract  \
-    && mkdir /usr/src/php/ext/swoole \
-    && wget https://github.com/swoole/swoole-src/archive/refs/tags/v5.0.2.tar.gz \
-    && tar -xvf v5.0.2.tar.gz --strip-components=1 -C /usr/src/php/ext/swoole \
-    && docker-php-ext-configure swoole \
-    --enable-mysqlnd      \
-    --enable-openssl      \
-    --enable-sockets --enable-swoole-curl \
-    && docker-php-ext-install -j$(nproc) swoole \
-    && rm -rf v5.0.2.tar.gz \
-    && docker-php-source delete 
+RUN pecl install swoole \
+    && docker-php-ext-enable swoole
 
 
 
@@ -63,14 +52,13 @@ RUN apt-get install -y librdkafka-dev  \
     && docker-php-ext-enable xdebug rdkafka
 
 # ImageMagick
-RUN apt-get install -y libmagickwand-dev \
-    && pecl install imagick \
-    && docker-php-ext-enable imagick
+# RUN pecl install imagick \
+#     && docker-php-ext-enable imagick
 
 # 配置 Xdebug
 RUN echo "xdebug.mode=debug" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
     && echo "xdebug.client_host=host.docker.internal" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-    && echo "xdebug.client_port=9003" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+    && echo "xdebug.client_port=9004" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 RUN curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/composer

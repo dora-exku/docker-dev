@@ -7,6 +7,7 @@ networks:
 services:
   nginx:
     build: ./nginx
+    container_name: nginx
     ports:
       - "80:80"
     volumes:
@@ -17,6 +18,15 @@ services:
 
   php-fpm-56:
     build: ./php-fpm-56
+    container_name: php-fpm56
+    volumes:
+      - ${CODE_DIR}:/var/www
+    networks:
+      - backend
+
+  php-fpm-74:
+    build: ./php-fpm-74
+    container_name: php-fpm74
     volumes:
       - ${CODE_DIR}:/var/www
     networks:
@@ -24,6 +34,7 @@ services:
 
   php-fpm-80:
     build: ./php-fpm-80
+    container_name: php-fpm80
     volumes:
       - ${CODE_DIR}:/var/www
     networks:
@@ -31,9 +42,20 @@ services:
 
   php-fpm-82:
     build: ./php-fpm-82
+    container_name: php-fpm82
     ports:
       - "9501:9501"
       - "9082:9003"
+    volumes:
+      - ${CODE_DIR}:/var/www
+    networks:
+      - backend
+
+  php-fpm-83:
+    build: ./php-fpm-83
+    container_name: php-fpm83
+    ports:
+      - "9083:9003"
     volumes:
       - ${CODE_DIR}:/var/www
     networks:
@@ -44,6 +66,7 @@ services:
       context: ./mysql
       args:
         - MYSQL_VERSION=${MYSQL_VERSION}
+    container_name: mysql
     environment:
       - MYSQL_DATABASE=${MYSQL_DATABASE}
       - MYSQL_USER=${MYSQL_USER}
@@ -59,6 +82,7 @@ services:
       - backend
   redis:
     build: ./redis
+    container_name: redis
     volumes:
       - ${DATA_PATH}/redis:/data
     command: --requirepass ${REDIS_PASSWORD}
@@ -69,6 +93,7 @@ services:
 
   mailpit:
     build: ./mailpit
+    container_name: mailpit
     ports:
       - "${MAILPIT_WEB_PORT}:8025"
     networks:
