@@ -15,6 +15,7 @@ RUN apt-get update && apt-get install -y \
     libmemcached11 \
     libmemcachedutil2 \
     libmemcached-dev \
+    libssl-dev \
     # igbinary \
     # msgpack \
     build-essential \
@@ -39,7 +40,7 @@ RUN apt-get update && apt-get install -y \
 # && docker-php-ext-install -j$(nproc) xmlrpc
 
 RUN pecl install memcached-3.2.0 \
-    pecl install redis-5.3.7 \
+    && pecl install redis-5.3.7 \
     && docker-php-ext-enable memcached redis
 
 # swoole 

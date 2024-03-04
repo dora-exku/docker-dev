@@ -2,6 +2,9 @@ FROM php:5.6-fpm
 
 WORKDIR /var/www
 
+RUN echo "deb http://archive.debian.org/debian/ stretch main" > /etc/apt/sources.list \
+    && echo "deb http://archive.debian.org/debian-security stretch/updates main" >> /etc/apt/sources.list
+
 RUN apt-get update && apt-get install -y \
     libfreetype6-dev \
     libjpeg62-turbo-dev \
@@ -38,9 +41,17 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install -j$(nproc) pcntl
 
 
-RUN pecl install memcached-2.2.0 \
-    pecl install redis-2.2.8 \
-    && docker-php-ext-enable memcached redis
+# 安装 redis
+RUN wget https://github.com/phpredis/phpredis/archive/refs/tags/4.3.0.tar.gz \
+    && tar -zxvf 4.3.0.tar.gz \
+    && cd phpredis-4.3.0 \
+    && phpize \
+    && ./configure \
+    && make \
+    && make install \
+    && docker-php-ext-enable redis
+# RUN pecl install redis-4.0.1 \
+#     && docker-php-ext-enable redis
 
 RUN curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/composer
