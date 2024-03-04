@@ -98,3 +98,17 @@ services:
       - "${MAILPIT_WEB_PORT}:8025"
     networks:
       - backend
+
+  mongo:
+    build: ./mongo
+    container_name: mongo
+    volumes:
+      - ${DATA_PATH}/mongo:/data/db
+    ports:
+      - "${MONGO_PORT}:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
+
+    networks:
+      - backend
