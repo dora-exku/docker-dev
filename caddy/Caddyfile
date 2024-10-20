@@ -1,0 +1,7 @@
+import snippets/*
+
+# 账单小程序
+import laravel-app zhangdan.test:80 /var/www/zhangdan php-fpm-82:9000
+
+# laravel11
+import laravel-app laravel11.test:80 /var/www/laravel11 php-fpm-82:9000

@@ -1,26 +1,28 @@
-version: '3'
-
 networks:
   backend:
     driver: bridge
 
 services:
-  nginx:
-    build: ./nginx
-    container_name: nginx
+  # nginx:
+  #   build: ./nginx
+  #   container_name: nginx
+  #   ports:
+  #     - "80:80"
+  #   volumes:
+  #     - ${CODE_DIR}:/var/www
+  #     - ./nginx/sites:/etc/nginx/conf.d
+  #   networks:
+  #     - backend
+
+  caddy:
+    build: ./caddy
+    container_name: caddy
     ports:
       - "80:80"
     volumes:
       - ${CODE_DIR}:/var/www
-      - ./nginx/sites:/etc/nginx/conf.d
-    networks:
-      - backend
-
-  php-fpm-56:
-    build: ./php-fpm-56
-    container_name: php-fpm56
-    volumes:
-      - ${CODE_DIR}:/var/www
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile
+      - ./caddy/snippets:/etc/caddy/snippets
     networks:
       - backend
 
@@ -80,6 +82,21 @@ services:
       - "${MYSQL_PORT}:3306"
     networks:
       - backend
+
+  postgres:
+    build: ./postgres
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - TZ=${WORKSPACE_TIMEZONE}
+    volumes:
+      - ${DATA_PATH}/postgres:/var/lib/postgresql/data
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    networks:
+      - backend
+
   redis:
     build: ./redis
     container_name: redis
@@ -90,6 +107,14 @@ services:
       - "${REDIS_PORT}:6379"
     networks:
       - backend
+
+  mongo:
+    build: ./mongo
+    container_name: mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+      - TZ=${WORKSPACE_TIMEZONE}
 
   mailpit:
     build: ./mailpit

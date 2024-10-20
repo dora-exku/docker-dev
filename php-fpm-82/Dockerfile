@@ -2,7 +2,7 @@ FROM php:8.2-fpm
 
 WORKDIR /var/www
 
-RUN apt-get update && apt-get install -y \
+RUN apt update && apt-get update && apt-get install -y \
     libfreetype6-dev \
     libjpeg-dev \
     libpng-dev \
@@ -12,9 +12,10 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev \
     libxslt1-dev \
     zlib1g-dev \
-    libmemcached11 \
-    libmemcachedutil2 \
+    openssl \
+    libssl-dev \
     libmemcached-dev \
+    libcurl4-openssl-dev \
     # igbinary \
     # msgpack \
     build-essential \
@@ -38,13 +39,12 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install -j$(nproc) pcntl
 # && docker-php-ext-install -j$(nproc) xmlrpc
 
-RUN pecl install memcached-3.2.0 \
-    pecl install redis-5.3.7 \
+RUN pecl install -f memcached-3.3.0 \
+    pecl install -f redis-5.3.7 \
     && docker-php-ext-enable memcached redis
 
 # swoole 
-RUN apt-get install -y libssl-dev libcurl4-openssl-dev \ 
-    && docker-php-source extract  \
+RUN docker-php-source extract  \
     && mkdir /usr/src/php/ext/swoole \
     && wget https://github.com/swoole/swoole-src/archive/refs/tags/v5.0.2.tar.gz \
     && tar -xvf v5.0.2.tar.gz --strip-components=1 -C /usr/src/php/ext/swoole \
