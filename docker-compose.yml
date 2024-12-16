@@ -21,6 +21,7 @@ services:
     container_name: php-fpm56
     volumes:
       - ${CODE_DIR}:/var/www
+      - ./php-fpm-56/php.ini:/usr/local/etc/php/php.ini
     networks:
       - backend
 
@@ -80,6 +81,24 @@ services:
       - "${MYSQL_PORT}:3306"
     networks:
       - backend
+
+  mysql57:
+    build:
+      context: ./mysql57
+    container_name: mysql57
+    environment:
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - TZ=${WORKSPACE_TIMEZONE}
+    volumes:
+      - ${DATA_PATH}/mysql57:/var/lib/mysql
+    ports:
+      - "3307:3306"
+    networks:
+      - backend
+
   redis:
     build: ./redis
     container_name: redis
@@ -96,19 +115,5 @@ services:
     container_name: mailpit
     ports:
       - "${MAILPIT_WEB_PORT}:8025"
-    networks:
-      - backend
-
-  mongo:
-    build: ./mongo
-    container_name: mongo
-    volumes:
-      - ${DATA_PATH}/mongo:/data/db
-    ports:
-      - "${MONGO_PORT}:27017"
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USERNAME}
-      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
-
     networks:
       - backend

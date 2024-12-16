@@ -9,6 +9,7 @@ RUN apt-get update && apt-get install -y \
     libfreetype6-dev \
     libjpeg62-turbo-dev \
     libpng-dev \
+    libjpeg-dev \
     libicu-dev \
     libmcrypt-dev \
     libxslt1-dev \
@@ -27,7 +28,7 @@ RUN apt-get update && apt-get install -y \
     wget \
     procps \
     vim \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install -j$(nproc) gd \
     # && docker-php-ext-install -j$(nproc) libxml \
     && docker-php-ext-install -j$(nproc) mcrypt \ 
