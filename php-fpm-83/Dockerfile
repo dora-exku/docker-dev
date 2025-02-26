@@ -51,6 +51,11 @@ RUN apt-get install -y librdkafka-dev  \
     && pecl install xdebug rdkafka \
     && docker-php-ext-enable xdebug rdkafka
 
+# mongodb
+RUN apt-get install -y libssl-dev \
+    && pecl install mongodb \
+    && docker-php-ext-enable mongodb
+
 # ImageMagick
 # RUN pecl install imagick \
 #     && docker-php-ext-enable imagick

@@ -42,6 +42,11 @@ RUN pecl install memcached-3.2.0 \
     pecl install redis-5.3.7 \
     && docker-php-ext-enable memcached redis
 
+# mongodb
+RUN apt-get install -y libssl-dev \
+    && pecl install mongodb \
+    && docker-php-ext-enable mongodb
+
 RUN curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/composer
 
